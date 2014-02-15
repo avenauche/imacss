@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Imacss by avenauche</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Imacss</h1>
+        <h2>An application and library that transforms image files to data URIs and embeds them into a single CSS file.</h2>
+        <a href="https://github.com/avenauche/imacss" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a name="imacss-" class="anchor" href="#imacss-"><span class="octicon octicon-link"></span></a>imacss <a href="https://travis-ci.org/akoenig/imacss"><img src="https://travis-ci.org/akoenig/imacss.png?branch=master" alt="Build Status"></a>
+</h1>
+
+<p><em>pronunciation: imax</em></p>
+
+<p>An application and library that transforms image files to <a href="https://www.ietf.org/rfc/rfc2397.txt">data URIs (rfc2397)</a> and embeds them into a single CSS file as background images.</p>
+
+<p>Let's say you have a web-based frontend which embeds a lot of images (e.g. icons). This referencing produces HTTP requests for every single image. What if you would like to minimize it to just one request? That is something <code>imacss</code> can do for you.</p>
+
+<h2>
+<a name="what" class="anchor" href="#what"><span class="octicon octicon-link"></span></a>What?</h2>
+
+<p>Okay, enough words. Let's dive straight into a transformation example. If we assume that you have two SVGs, like <code>github.svg</code> and <code>quitter.svg</code>, <code>imacss</code> will generate this CSS code for you.</p>
+
+<div class="highlight highlight-css"><pre><span class="nc">.imacss.imacss-github</span> <span class="p">{</span>
+    <span class="k">background</span><span class="o">:</span><span class="sx">url(data:image/svg+xml;base64,iVBORw0KGgoAAAANSUhEBg...)</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.imacss.imacss-quitter</span> <span class="p">{</span>
+    <span class="k">background</span><span class="o">:</span><span class="sx">url(data:image/svg+xml;base64,iVBORw0KGgoAAAANSUhADA...)</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>You can refer to this images by using the respective CSS classes:</p>
+
+<div class="highlight highlight-html"><pre><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"imacss imacss-quitter"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/div&gt;</span>
+</pre></div>
+
+<h2>
+<a name="cli" class="anchor" href="#cli"><span class="octicon octicon-link"></span></a>CLI</h2>
+
+<p><code>imacss</code> comes with a command-line interface which pipes the output to stdout by default (yeah, plain old text streams FTW!).</p>
+
+<h3>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h3>
+
+<p>Install with <a href="https://npmjs.org/package/imacss">npm</a> globally.</p>
+
+<pre><code>npm install -g imacss
+</code></pre>
+
+<h3>
+<a name="usage-examples" class="anchor" href="#usage-examples"><span class="octicon octicon-link"></span></a>Usage examples</h3>
+
+<p>Embed all SVGs in a particular directory and all its subdirectories (will pipe the output to stdout).</p>
+
+<pre><code>$ imacss "~/projects/webapp/images/**/*.svg"
+</code></pre>
+
+<p>Embed all SVGs in a particular directory and transfer them to a CSS file which will be saved in the CWD.</p>
+
+<pre><code>$ imacss "~/projects/webapp/images/*.svg" images.svg.css
+</code></pre>
+
+<p>Embed all SVGs <em>and</em> PNGs in a particular directory and transfer them to a CSS file which will be saved in the CWD.</p>
+
+<pre><code>$ imacss "~/projects/webapp/images/*.{svg,png}" images.css
+</code></pre>
+
+<p>If you don't like the <code>imacss</code> selector namespace you are able to modify it as well.</p>
+
+<pre><code>$ imacss "~/projects/webapp/images/*.{svg,png}" images.css foobar
+</code></pre>
+
+<p>will produce this selector structure in the CSS file:</p>
+
+<div class="highlight highlight-css"><pre><span class="nc">.foobar.foobar-github</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+</pre></div>
+
+<h2>
+<a name="api" class="anchor" href="#api"><span class="octicon octicon-link"></span></a>API</h2>
+
+<p>If you would like to use the <code>imacss</code> functionality within your application, there is an API for that.</p>
+
+<h3>
+<a name="install" class="anchor" href="#install"><span class="octicon octicon-link"></span></a>Install</h3>
+
+<p>Install with <a href="https://npmjs.org/package/imacss">npm</a></p>
+
+<pre><code>npm install --save imacss
+</code></pre>
+
+<h3>
+<a name="methods" class="anchor" href="#methods"><span class="octicon octicon-link"></span></a>Methods</h3>
+
+<h4>
+<a name="transformglob-namespace" class="anchor" href="#transformglob-namespace"><span class="octicon octicon-link"></span></a>transform(glob[, namespace]);</h4>
+
+<p>Transforms the image files from the specified glob and returns a stream with the CSS selectors that can be piped to somewhere else.</p>
+
+<p><strong>Arguments</strong></p>
+
+<p><code>glob</code></p>
+
+<p>The path to the images which should be transformed. You can use any glob pattern you want.</p>
+
+<p><code>namespace</code> (optional; default=imacss)</p>
+
+<p>The CSS selector namespace.</p>
+
+<h3>
+<a name="usage-example" class="anchor" href="#usage-example"><span class="octicon octicon-link"></span></a>Usage example</h3>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">imacss</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'imacss'</span><span class="p">);</span>
+
+<span class="nx">imacss</span>
+    <span class="p">.</span><span class="nx">transform</span><span class="p">(</span><span class="s1">'/path/to/your/images/*.png'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'error'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">error</span><span class="p">(</span><span class="s1">'Transforming images failed: '</span> <span class="o">+</span> <span class="nx">err</span><span class="p">);</span>
+    <span class="p">})</span>
+    <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">stdout</span><span class="p">);</span>
+</pre></div>
+
+<h2>
+<a name="changelog" class="anchor" href="#changelog"><span class="octicon octicon-link"></span></a>Changelog</h2>
+
+<h3>
+<a name="version-011-20140211" class="anchor" href="#version-011-20140211"><span class="octicon octicon-link"></span></a>Version 0.1.1 (20140211)</h3>
+
+<ul>
+<li>Fixed typos in the README.</li>
+</ul><h3>
+<a name="version-010-20140211" class="anchor" href="#version-010-20140211"><span class="octicon octicon-link"></span></a>Version 0.1.0 (20140211)</h3>
+
+<ul>
+<li>Initial Release. Implemented the core functionality (CLI and API).</li>
+</ul><h2>
+<a name="author" class="anchor" href="#author"><span class="octicon octicon-link"></span></a>Author</h2>
+
+<p>Copyright 2014, <a href="http://iam.andrekoenig.info">André König</a> (<a href="mailto:andre.koenig@posteo.de">andre.koenig@posteo.de</a>)</p>
+
+<p><a href="https://bitdeli.com/free" title="Bitdeli Badge"><img src="https://d2weczhvl823v0.cloudfront.net/akoenig/imacss/trend.png" alt="Bitdeli Badge"></a></p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/avenauche/imacss/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/avenauche/imacss/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/avenauche/imacss"></a> is maintained by <a href="https://github.com/avenauche">avenauche</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
